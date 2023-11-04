@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,19 +25,32 @@ var CCs = []CreditCard{
 	{ID: 245, Balance: 4626262, Owner: &Owner{firstname: "ex2", lastname: "ex3.2", age: 33, address: "WA"}},
 }
 
-func getOwner() {
+func getOwner(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, CCs)
 
 }
 
-func getOwnerById() {
-
+func getOwnerById(c *gin.Context) {
+	id = c.Param("ID")
+	for _, a := range CCs {
+		if a.ID == id {
+			c.IndentedJSON(http.StatusOK, a)
+		}
+	}
 }
 
-func createOwner() {
+func createOwner(c *gin.Context) {
+	var newOwner CreditCard
 
+	if err := c.BindJSON(&newOwner); err != nil {
+		return
+	}
+
+	CCs = append(CCs, newOwner)
+	c.IndentedJSON(http.StatusCreated, newOwner)
 }
 
-func updateOwnerData() {
+func updateOwnerData(c *gin.Context) {
 
 }
 
