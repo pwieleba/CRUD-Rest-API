@@ -51,9 +51,6 @@ func createOwner(c *gin.Context) {
 }
 
 func updateOwnerData(c *gin.Context) {
-	uID := c.Param("ID")
-	uBalance := c.Param("Balance")
-	uOwner := c.Param("Owner")
 
 }
 
@@ -62,6 +59,7 @@ func deleteOwner(c *gin.Context) {
 }
 
 func main() {
+
 	r := gin.Default()
 	r.GET("/CCs", getOwner)
 	r.GET("/CCs/:id", getOwnerById)
