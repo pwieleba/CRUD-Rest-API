@@ -1,4 +1,4 @@
-package users
+package dddd
 
 type CreditCard struct {
 	ID      string `json:"id"`

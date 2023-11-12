@@ -35,9 +35,6 @@ func getOwnerById(c *gin.Context) {
 	for _, a := range CCs {
 		if a.ID == ID {
 			c.IndentedJSON(http.StatusOK, a)
-		} else {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
-			continue
 		}
 	}
 }
@@ -51,10 +48,6 @@ func createOwner(c *gin.Context) {
 
 	CCs = append(CCs, newOwner)
 	c.IndentedJSON(http.StatusCreated, newOwner)
-}
-
-func updateOwnerData(c *gin.Context) {
-
 }
 
 func deleteOwner(c *gin.Context) {
@@ -82,7 +75,7 @@ func main() {
 	r.GET("/CCs", getOwner)         //works
 	r.GET("/CCs/:ID", getOwnerById) //works
 	r.POST("/CCs", createOwner)     //works
-	r.PUT("/CCs/:ID", updateOwnerData)
-	r.DELETE("/CCs/:ID", deleteOwner)
+	// r.PUT("/CCs/:ID", updateOwnerData) //nw
+	r.DELETE("/CCs/:ID", deleteOwner) //?
 	r.Run("localhost:8080")
 }
