@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,12 +31,16 @@ func getOwner(c *gin.Context) {
 
 }
 
+func errormes() {
+	fmt.Println("User not found!")
+}
+
 func getOwnerById(c *gin.Context) {
 	ID := c.Param("ID")
 	for _, a := range CCs {
 		if a.ID == ID {
 			c.IndentedJSON(http.StatusOK, a)
-		}
+		} else if c.IndentedJSON(http.StatusBadRequest, errormes)
 	}
 }
 
@@ -53,7 +58,7 @@ func createOwner(c *gin.Context) {
 func deleteOwner(c *gin.Context) {
 	ID := c.Param("ID")
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", "http://localhost:8080/CCs/"+ID, nil)
+	req, err := http.NewRequest("DELETE", "http://localhost:8080/CCs/"+ ID, nil)
 	if err != nil {
 		panic(err)
 	}
