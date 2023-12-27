@@ -1,5 +1,8 @@
 # Crud Rest Api in Go
-A small api I made while learning Go, basic http stuff
+Crud Api with SQL
+
+
+
 # Features
 Scalable API made in Golang, made with:
 -gonic library
