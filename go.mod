@@ -1,4 +1,4 @@
-module api
+module CRUD-Rest-API
 
 go 1.21.3
 
