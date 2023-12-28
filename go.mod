@@ -1,4 +1,4 @@
-module CRUD-Rest-API
+module github.com/pwieleba/CRUD-Rest-API
 
 go 1.21.3
 
