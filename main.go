@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-	//"github.com/CRUD-Rest-API/api"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,19 +12,43 @@ func getOwner(c *gin.Context) {
 
 }
 
-//func errormes() {
-//	fmt.Println("User not found!") //used in func below
-//}
+// /////////////////////////////////////////db
+type CreditCard struct {
+	ID      string `json:"id"`
+	Balance int    `json:"balance"`
+	Owner   *Owner `json:"owner"`
+}
 
-//func getOwnerById(c *gin.Context) {
-//ID := c.Param("ID")
-//for _, a := range CCs {
-//if a.ID == ID {
-//c.IndentedJSON(http.StatusOK, a)
-//	} //else if c.IndentedJSON(http.StatusBadRequest, errormes);
-// }
+type Owner struct {
+	firstname string
+	lastname  string
+	age       int
+	address   string
+}
 
-//} //code doesnt work when this func is in it?????????
+var CCs = []CreditCard{
+	{ID: "2446", Balance: 1345141, Owner: &Owner{firstname: "ex1", lastname: "ex1.2", age: 45, address: "NY"}},
+	{ID: "96", Balance: 624262, Owner: &Owner{firstname: "ex2", lastname: "ex2.2", age: 69, address: "FL"}},
+	{ID: "245", Balance: 4626262, Owner: &Owner{firstname: "ex2", lastname: "ex3.2", age: 33, address: "WA"}},
+}
+
+///////////////////////////////////////////
+
+func errormes() {
+	fmt.Println("User not found!") //used in func below
+}
+
+func getOwnerById(c *gin.Context) {
+	ID := c.Param("ID")
+	for _, a := range CCs {
+		if a.ID == ID {
+			c.IndentedJSON(http.StatusOK, a)
+		} else {
+			c.IndentedJSON(http.StatusBadRequest, errormes)
+		}
+	}
+
+} //code doesnt work when this func is in it?????????
 
 func createOwner(c *gin.Context) {
 	var newOwner CreditCard
@@ -57,10 +82,10 @@ func deleteOwner(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
-	r.GET("/CCs", getOwner) //works
-	//r.GET("/CCs/:ID", getOwnerById) //do not works
-	r.POST("/CCs", createOwner) //works
+	r.GET("/CCs", getOwner)         //works
+	r.GET("/CCs/:ID", getOwnerById) //works
+	r.POST("/CCs", createOwner)     //works
 	// r.PUT("/CCs/:ID", updateOwnerData) //nw
-	r.DELETE("/CCs/:ID", deleteOwner) //?
+	r.DELETE("/CCs/:ID", deleteOwner)
 	r.Run("localhost:8080")
 }
