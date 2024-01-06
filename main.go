@@ -7,11 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getOwner(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, CCs)
-
-}
-
 // /////////////////////////////////////////db
 type CreditCard struct {
 	ID      string `json:"id"`
@@ -33,6 +28,11 @@ var CCs = []CreditCard{
 }
 
 ///////////////////////////////////////////
+
+func getOwner(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, CCs)
+
+}
 
 func errormes() {
 	fmt.Println("User not found!") //used in func below
@@ -82,10 +82,11 @@ func deleteOwner(c *gin.Context) {
 
 func main() {
 	r := gin.Default()
-	r.GET("/CCs", getOwner)         //works
-	r.GET("/CCs/:ID", getOwnerById) //works
-	r.POST("/CCs", createOwner)     //works
-	// r.PUT("/CCs/:ID", updateOwnerData) //nw
-	r.DELETE("/CCs/:ID", deleteOwner)
+	public := r.Group("/api")
+	public.GET("/CCs", getOwner)         //works
+	public.GET("/CCs/:ID", getOwnerById) //works
+	public.POST("/CCs", createOwner)     //works
+	//r.PUT("/CCs/:ID", updateOwnerData) //nw
+	public.DELETE("/CCs/:ID", deleteOwner)
 	r.Run("localhost:8080")
 }
