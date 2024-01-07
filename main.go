@@ -5,9 +5,18 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // /////////////////////////////////////////db
+// user for token
+
+type User struct {
+	gorm.Model
+	Username string `gorm:"size:255;not null;unique" json:"username"`
+	Password string `gorm:"size:255;not null" json:"password"`
+}
+
 type CreditCard struct {
 	ID      string `json:"id"`
 	Balance int    `json:"balance"`
@@ -22,12 +31,29 @@ type Owner struct {
 }
 
 var CCs = []CreditCard{
-	{ID: "2446", Balance: 1345141, Owner: &Owner{firstname: "ex1", lastname: "ex1.2", age: 45, address: "NY"}},
-	{ID: "96", Balance: 624262, Owner: &Owner{firstname: "ex2", lastname: "ex2.2", age: 69, address: "FL"}},
-	{ID: "245", Balance: 4626262, Owner: &Owner{firstname: "ex2", lastname: "ex3.2", age: 33, address: "WA"}},
+	{ID: "2446", Balance: 1345141, Owner: &Owner{firstname: "Joe", lastname: "Cotton", age: 45, address: "NY"}},
+	{ID: "96", Balance: 624262, Owner: &Owner{firstname: "Donald", lastname: "Trump", age: 69, address: "FL"}},
+	{ID: "245", Balance: 4626262, Owner: &Owner{firstname: "Kanye", lastname: "West", age: 33, address: "WA"}},
 }
 
-///////////////////////////////////////////
+///////////////// auth
+
+type SingUpInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+func SingUp(c *gin.Context) {
+	var input SingUpInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "validated"})
+}
+
+/////////////////////////// crud
 
 func getOwner(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, CCs)
@@ -85,7 +111,8 @@ func main() {
 	public := r.Group("/api")
 	public.GET("/CCs", getOwner)         //works
 	public.GET("/CCs/:ID", getOwnerById) //works
-	public.POST("/CCs", createOwner)     //works
+	public.POST("/CCs", createOwner)
+	public.POST("/singup", SingUp) //works
 	//r.PUT("/CCs/:ID", updateOwnerData) //nw
 	public.DELETE("/CCs/:ID", deleteOwner)
 	r.Run("localhost:8080")
