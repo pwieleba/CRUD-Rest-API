@@ -2,13 +2,40 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 // /////////////////////////////////////////db
+var DB *gorm.DB
+
+func ConnectDB() {
+	err := godotenv.Load(".env")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_DATABASE")
+	dbUser := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+
+	BURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
+
+	DB, err = gorm.Open(Dbdriver, DBURL)
+
+	if err != nil {
+		fmt.Println("Cannot connect to database ", Dbdriver)
+		log.Fatal("connection error:", err)
+	} else {
+		fmt.Println("We are connected to the database ", Dbdriver)
+	}
+
+	DB.AutoMigrate(&User{})
+
+}
+
 // user for token
 
 type User struct {
@@ -36,7 +63,7 @@ var CCs = []CreditCard{
 	{ID: "245", Balance: 4626262, Owner: &Owner{firstname: "Kanye", lastname: "West", age: 33, address: "WA"}},
 }
 
-///////////////// auth
+//////////////////// auth
 
 type SingUpInput struct {
 	Username string `json:"username" binding:"required"`
@@ -74,7 +101,7 @@ func getOwnerById(c *gin.Context) {
 		}
 	}
 
-} //code doesnt work when this func is in it?????????
+}
 
 func createOwner(c *gin.Context) {
 	var newOwner CreditCard
